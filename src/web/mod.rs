@@ -1,7 +1,7 @@
 //! src/web/mod.rs
 
 pub mod routes_login;
-mod routes_tickets;
-
+pub mod routes_tickets;
+pub mod mw_auth;
 
 pub const AUTH_TOKEN: &str = "auth-token";

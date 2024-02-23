@@ -1,7 +1,7 @@
 //! src/web/routes_tickets.rs
 
 use axum::{Json, Router};
-use axum::extract::{FromRef, Path, State};
+use axum::extract::{Path, State};
 use axum::routing::{delete, post};
 use crate::model::{ModelController, Ticket, TicketForCreate};
 use crate::Result;

@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 use axum::response::{Html, IntoResponse, Response};
-use axum::{Router, ServiceExt};
+use axum::Router;
 use axum::routing::{get, get_service};
 use axum::extract::{Path, Query};
 use axum::middleware;
@@ -8,6 +8,7 @@ use axum::middleware;
 use serde::Deserialize;
 use tower_cookies::CookieManagerLayer;
 use tower_http::services::ServeDir;
+use crate::model::ModelController;
 pub use self::error::{Error, Result};
 
 
@@ -22,9 +23,16 @@ struct HelloParams {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    // Initialize ModelController.
+    let mc = ModelController::new().await?;
+
+    let routes_apis = web::routes_tickets::routes(mc.clone())
+        .route_layer(middleware::from_fn(web::mw_auth::mw_require_auth));
+
     let routes_all = Router::new()
         .merge(routes_hello())
         .merge(web::routes_login::routes())
+        .nest("/api", routes_apis)
         .layer(middleware::map_response(main_response_mapper))
         .layer(CookieManagerLayer::new())
         .fallback_service(routes_static());
