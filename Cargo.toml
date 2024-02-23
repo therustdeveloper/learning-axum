@@ -4,4 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = "0.6.20"
+tokio = { version = "1.36.0", features = ["full"] }
+axum = { version = "0.6", features = ["macros"] }
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.114"
+tower-http = { version = "0.4", features = ["fs"] }
+tower-cookies = "0.9"
+
+[dev-dependencies]
+anyhow = "1.0.80"
+httpc-test = "0.1.9"
