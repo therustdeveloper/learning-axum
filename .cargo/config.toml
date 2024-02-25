@@ -2,6 +2,13 @@
 
 RUST_LOG="learning_axum=debug"
 
+## -- K8s Secrets
+# Keys and passwords below are for localhost dev ONLY.
+# e.g., "password" type of passwords.
+# i.e, Encryption not needed.
+
+SERVICE_DB_URL="postgres://app_user:nirvana@localhost:5437/app_db"
+
 ## -- ConfigMap
 
 SERVICE_WEB_FOLDER="web-folder/"

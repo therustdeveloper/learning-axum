@@ -13,7 +13,7 @@ tower-http = { version = "0.5", features = ["fs"] }
 tower-cookies = "0.10"
 lazy-regex = "3.1.0"
 async-trait = "0.1"
-strum_macros = "0.25"
+strum_macros = "0.26"
 uuid = { version = "1", features = ["v4", "fast-rng"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
@@ -23,3 +23,4 @@ sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres", "uuid"
 [dev-dependencies]
 anyhow = "1.0.80"
 httpc-test = "0.1.9"
+serial_test = "2"
