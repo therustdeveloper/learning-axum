@@ -18,6 +18,7 @@ use axum::{middleware, Router};
 use std::net::SocketAddr;
 use tower_cookies::CookieManagerLayer;
 use tokio::net::TcpListener;
+use tracing::info;
 
 // endregion: --- Modules
 
@@ -40,7 +41,7 @@ async fn main() -> Result<()> {
 
     // region:    --- Start Server
     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
-    println!("->> {:<12} - {:?}\n", "LISTENING", listener.local_addr());
+    info!("{:<12} - {:?}\n", "LISTENING", listener.local_addr());
     axum::serve(listener, routes_all.into_make_service())
         .await
         .unwrap();
