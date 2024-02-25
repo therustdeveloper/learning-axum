@@ -16,6 +16,9 @@ async-trait = "0.1"
 strum_macros = "0.25"
 uuid = { version = "1", features = ["v4", "fast-rng"] }
 tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+env_filter = "0.1.0"
+sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres", "uuid", "time"] }
 
 [dev-dependencies]
 anyhow = "1.0.80"
