@@ -1,6 +1,6 @@
 # Learning Axum
 
-Min: 38:34
+Min: 1:10:12
 
 ## PostgreSQL
 
