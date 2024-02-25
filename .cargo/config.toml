@@ -1,3 +1,7 @@
 [env]
 
 RUST_LOG="learning_axum=debug"
+
+## -- ConfigMap
+
+SERVICE_WEB_FOLDER="web-folder/"

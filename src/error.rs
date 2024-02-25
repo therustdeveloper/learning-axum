@@ -4,6 +4,9 @@ pub type Result<T> = core::result::Result<T, Error>;
 
 #[derive(Debug)]
 pub enum Error {
+    // -- Config
+    ConfigMissingEnv(&'static str),
+
     // -- Modules
     Model(model::Error),
 }
@@ -18,10 +21,7 @@ impl From<model::Error> for Error {
 
 // region:    --- Error Boilerplate
 impl core::fmt::Display for Error {
-    fn fmt(
-        &self,
-        fmt: &mut core::fmt::Formatter,
-    ) -> core::result::Result<(), core::fmt::Error> {
+    fn fmt(&self, fmt: &mut core::fmt::Formatter) -> core::result::Result<(), core::fmt::Error> {
         write!(fmt, "{self:?}")
     }
 }

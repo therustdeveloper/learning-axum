@@ -5,8 +5,8 @@ use axum::http::{Method, Uri};
 use axum::response::{IntoResponse, Response};
 use axum::Json;
 use serde_json::json;
-use uuid::Uuid;
 use tracing::debug;
+use uuid::Uuid;
 
 pub async fn mw_reponse_map(
     ctx: Option<Ctx>,
@@ -22,22 +22,21 @@ pub async fn mw_reponse_map(
     let client_status_error = web_error.map(|se| se.client_status_and_error());
 
     // -- If client error, build the new reponse.
-    let error_response =
-        client_status_error
-            .as_ref()
-            .map(|(status_code, client_error)| {
-                let client_error_body = json!({
-					"error": {
-						"type": client_error.as_ref(),
-						"req_uuid": uuid.to_string(),
-					}
-				});
-
-                debug!(" CLIENT ERROR BODY:\n{client_error_body}");
-
-                // Build the new response from the client_error_body
-                (*status_code, Json(client_error_body)).into_response()
+    let error_response = client_status_error
+        .as_ref()
+        .map(|(status_code, client_error)| {
+            let client_error_body = json!({
+                "error": {
+                    "type": client_error.as_ref(),
+                    "req_uuid": uuid.to_string(),
+                }
             });
+
+            debug!(" CLIENT ERROR BODY:\n{client_error_body}");
+
+            // Build the new response from the client_error_body
+            (*status_code, Json(client_error_body)).into_response()
+        });
 
     // -- Build and log the server log line.
     let client_error = client_status_error.unzip().1;

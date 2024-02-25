@@ -14,7 +14,7 @@ async fn quick_dev() -> Result<()> {
         json!({
             "username": "demo1",
             "pwd": "welcome",
-        })
+        }),
     );
     req_login.await?.print().await?;
 

@@ -2,6 +2,7 @@
 
 // region:    --- Modules
 
+mod config;
 mod ctx;
 mod error;
 mod log;
@@ -9,6 +10,7 @@ mod model;
 mod web;
 
 pub use self::error::{Error, Result};
+pub use config::config;
 
 use crate::model::ModelManager;
 use crate::web::mw_auth::mw_ctx_resolve;
@@ -16,8 +18,8 @@ use crate::web::mw_res_map::mw_reponse_map;
 use crate::web::{routes_login, routes_static};
 use axum::{middleware, Router};
 use std::net::SocketAddr;
-use tower_cookies::CookieManagerLayer;
 use tokio::net::TcpListener;
+use tower_cookies::CookieManagerLayer;
 use tracing::info;
 
 // endregion: --- Modules
