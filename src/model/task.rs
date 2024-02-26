@@ -173,7 +173,7 @@ mod tests {
                 title: Some(fx_title_new.to_string()),
             },
         )
-            .await?;
+        .await?;
 
         // -- Check
         let task = TaskBmc::get(&ctx, &mm, fx_task.id).await?;
