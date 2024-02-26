@@ -21,8 +21,8 @@ mod error;
 mod store;
 pub mod task;
 
-use crate::model::store::{Db, new_db_pool};
 pub use self::error::{Error, Result};
+use crate::model::store::{new_db_pool, Db};
 
 // endregion: --- Modules
 

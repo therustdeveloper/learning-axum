@@ -1,11 +1,11 @@
 //! src/model/task.rs
 
+use crate::ctx::Ctx;
+use crate::model::Error;
 use crate::model::ModelManager;
 use crate::model::Result;
-use crate::model::Error;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
-use crate::ctx::Ctx;
 
 // region:      --- Task Types
 
@@ -32,19 +32,14 @@ pub struct TaskForUpdate {
 pub struct TaskBmc;
 
 impl TaskBmc {
-    pub async fn create(
-        _ctx: &Ctx,
-        mm: &ModelManager,
-        task_c: TaskForCreate,
-    ) -> Result<i64> {
+    pub async fn create(_ctx: &Ctx, mm: &ModelManager, task_c: TaskForCreate) -> Result<i64> {
         let db = mm.db(); // we can call db because we are in the model
 
-        let (id,) = sqlx::query_as::<_, (i64,)>(
-            "INSERT INTO task (title) values ($1) returning id"
-        )
-            .bind(task_c.title)
-            .fetch_one(db)
-            .await?;
+        let (id,) =
+            sqlx::query_as::<_, (i64,)>("INSERT INTO task (title) values ($1) returning id")
+                .bind(task_c.title)
+                .fetch_one(db)
+                .await?;
 
         Ok(id)
     }
@@ -85,8 +80,8 @@ impl TaskBmc {
 mod tests {
     #![allow(unused)]
     use super::*;
-    use anyhow::Result;
     use crate::_dev_utils;
+    use anyhow::Result;
     use serial_test::serial;
 
     #[serial]
@@ -123,6 +118,32 @@ mod tests {
 
         // -- Exec
         let res = TaskBmc::get(&ctx, &mm, fx_id).await;
+
+        // -- Check
+        assert!(
+            matches!(
+                res,
+                Err(Error::EntityNotFound {
+                    entity: "task",
+                    id: 100
+                })
+            ),
+            "EntityNotFound not matching"
+        );
+
+        Ok(())
+    }
+
+    #[serial]
+    #[tokio::test]
+    async fn test_delete_err_not_found() -> Result<()> {
+        // -- Setup & Fixtures
+        let mm = _dev_utils::init_test().await;
+        let ctx = Ctx::root_ctx();
+        let fx_id = 100;
+
+        // -- Exec
+        let res = TaskBmc::delete(&ctx, &mm, fx_id).await;
 
         // -- Check
         assert!(

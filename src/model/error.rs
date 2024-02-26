@@ -1,7 +1,7 @@
 //! src/model/error.rs
 
-use serde::Serialize;
 use crate::model::store;
+use serde::Serialize;
 use serde_with::{serde_as, DisplayFromStr};
 
 pub type Result<T> = core::result::Result<T, Error>;
