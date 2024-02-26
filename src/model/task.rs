@@ -60,6 +60,22 @@ impl TaskBmc {
 
         Ok(task)
     }
+
+    pub async fn delete(_ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<()> {
+        let db = mm.db();
+
+        let count = sqlx::query("DELETE FROM task WHERE id = $1")
+            .bind(id)
+            .execute(db)
+            .await?
+            .rows_affected();
+
+        if count == 0 {
+            return Err(Error::EntityNotFound { entity: "task", id });
+        }
+
+        Ok(())
+    }
 }
 // endregion:   --- TaskBmc
 
@@ -88,20 +104,37 @@ mod tests {
         let id = TaskBmc::create(&ctx, &mm, task_c).await?;
 
         // -- Check
-        let (title,): (String,) = sqlx::query_as("SELECT title from task where id = $1")
-            .bind(id)
-            .fetch_one(mm.db())
-            .await?;
-
-        assert_eq!(title, fx_title);
+        let task = TaskBmc::get(&ctx, &mm, id).await?;
+        assert_eq!(task.title, fx_title);
 
         // -- Clean
-        let count = sqlx::query("DELETE FROM task WHERE id = $1")
-            .bind(id)
-            .execute(mm.db())
-            .await?
-            .rows_affected();
-        assert_eq!(count, 1, "Did not delete 1 row?");
+        TaskBmc::delete(&ctx, &mm, id).await?;
+
+        Ok(())
+    }
+
+    #[serial]
+    #[tokio::test]
+    async fn test_get_err_not_found() -> Result<()> {
+        // -- Setup & Fixtures
+        let mm = _dev_utils::init_test().await;
+        let ctx = Ctx::root_ctx();
+        let fx_id = 100;
+
+        // -- Exec
+        let res = TaskBmc::get(&ctx, &mm, fx_id).await;
+
+        // -- Check
+        assert!(
+            matches!(
+                res,
+                Err(Error::EntityNotFound {
+                    entity: "task",
+                    id: 100
+                })
+            ),
+            "EntityNotFound not matching"
+        );
 
         Ok(())
     }
