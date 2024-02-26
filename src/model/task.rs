@@ -154,6 +154,36 @@ mod tests {
 
     #[serial]
     #[tokio::test]
+    async fn test_update_ok() -> Result<()> {
+        // -- Setup & Fixtures
+        let mm = _dev_utils::init_test().await;
+        let ctx = Ctx::root_ctx();
+        let fx_title = "test_update_ok - task 01";
+        let fx_title_new = "test_update_ok - task 01 - new";
+        let fx_task = _dev_utils::seed_tasks(&ctx, &mm, &[fx_title])
+            .await?
+            .remove(0);
+
+        // -- Exec
+        TaskBmc::update(
+            &ctx,
+            &mm,
+            fx_task.id,
+            TaskForUpdate {
+                title: Some(fx_title_new.to_string()),
+            },
+        )
+            .await?;
+
+        // -- Check
+        let task = TaskBmc::get(&ctx, &mm, fx_task.id).await?;
+        assert_eq!(task.title, fx_title_new);
+
+        Ok(())
+    }
+
+    #[serial]
+    #[tokio::test]
     async fn test_delete_err_not_found() -> Result<()> {
         // -- Setup & Fixtures
         let mm = _dev_utils::init_test().await;
