@@ -1,9 +1,9 @@
 //! src/model/base.rs
 
-use sqlb::HasFields;
 use crate::ctx::Ctx;
 use crate::model::ModelManager;
 use crate::model::{Error, Result};
+use sqlb::HasFields;
 use sqlx::postgres::PgRow;
 use sqlx::FromRow;
 
@@ -35,10 +35,10 @@ where
 }
 
 pub async fn list<MC, E>(_ctx: &Ctx, mm: &ModelManager) -> Result<Vec<E>>
-    where
-        MC: DbBmc,
-        E: for<'r> FromRow<'r, PgRow> + Unpin + Send,
-        E: HasFields,
+where
+    MC: DbBmc,
+    E: for<'r> FromRow<'r, PgRow> + Unpin + Send,
+    E: HasFields,
 {
     let db = mm.db();
 
